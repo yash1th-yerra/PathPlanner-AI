@@ -117,7 +117,7 @@ def generate_travel_summary(source, destination, travel_data, language="en"):
     3. End with a brief comparison of which option is best for different priorities 
        (fastest, cheapest, most comfortable)
     
-    Keep the summary informative but concise (max 100 words),strictly don't include any breakdown of key translations.
+    Keep the summary informative in point wise but concise (max 100 words),strictly don't include any breakdown of key translations.
     """
     
     # Get summary from Gemini
