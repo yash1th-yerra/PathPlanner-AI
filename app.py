@@ -10,6 +10,7 @@ from geopy.geocoders import Nominatim
 from gtts import gTTS
 import base64
 import tempfile
+from langchain.schema.runnable import RunnablePassthrough
 
 load_dotenv()
 
@@ -168,8 +169,9 @@ CURRENCY_MAP = {
     "Japan": "¥", "Canada": "C$", "Australia": "A$", "UAE": "د.إ",
     "China": "¥", "Russia": "₽", "South Korea": "₩", "Brazil": "R$"
 }
-
-chain = LLMChain(llm=llm, prompt=prompt_template)
+chain = {"source": RunnablePassthrough(), 
+         "destination": RunnablePassthrough(), 
+         "preference": RunnablePassthrough()} | prompt_template | llm
 
 #Function to detect country from city name
 def get_country_from_city(city):
@@ -375,16 +377,16 @@ st.markdown('<h3 class="form-header">Enter Your Trip Details</h3>', unsafe_allow
 col1, col2 = st.columns(2)
 with col1:
     st.markdown('<p class="input-label">📍 Source Location</p>', unsafe_allow_html=True)
-    source = st.text_input("", placeholder="Enter starting point", key="source", label_visibility="collapsed")
+    source = st.text_input("Input Label", placeholder="Enter starting point", key="source", label_visibility="collapsed")
 
 with col2:
     st.markdown('<p class="input-label">📍 Destination</p>', unsafe_allow_html=True)
-    destination = st.text_input("", placeholder="Enter destination", key="destination", label_visibility="collapsed")
+    destination = st.text_input("Input Label", placeholder="Enter destination", key="destination", label_visibility="collapsed")
 
 col3, col4,col5 = st.columns(3)
 with col3:
     st.markdown('<p class="input-label">🎯 Travel Preference</p>', unsafe_allow_html=True)
-    preference = st.selectbox("", ["Cheapest", "Fastest", "Comfortable", "Eco-friendly"], key="preference", label_visibility="collapsed")
+    preference = st.selectbox("Preference", ["Cheapest", "Fastest", "Comfortable", "Eco-friendly"], key="preference", label_visibility="collapsed")
 
 with col4:
     st.markdown('<p class="input-label">🔽 Sort Results By</p>', unsafe_allow_html=True)
@@ -412,8 +414,9 @@ if search_clicked:
     if source and destination:
         st.markdown(f'<h2 class="section-header">🌍 Travel Options from {source} to {destination}</h2>', unsafe_allow_html=True)
         with st.spinner("Finding the best travel options for you..."):
-            response = chain.run({"source": source, "destination": destination, "preference": preference})
+            response = chain.invoke({"source": source, "destination": destination, "preference": preference})
             # st.write(f"{source} to {destination}")
+            response = response.content
             try:
                 clean_response = response.strip().strip("```json").strip("```")
                 travel_data = json.loads(clean_response)
