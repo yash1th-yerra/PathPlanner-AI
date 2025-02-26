@@ -4,4 +4,4 @@ streamlit
 python-dotenv
 geopy
 gtts
-langchain_google_genai
+langchain-google-genai
