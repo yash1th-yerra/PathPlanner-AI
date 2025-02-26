@@ -394,14 +394,14 @@ with col4:
     def update_sorting():
         st.session_state.sort_by = st.session_state.sort_selection
     
-    st.selectbox("", ["Default", "Lowest Price", "Shortest Duration"], key="sort_selection", on_change=update_sorting, label_visibility="collapsed")
+    st.selectbox("sorting", ["Default", "Lowest Price", "Shortest Duration"], key="sort_selection", on_change=update_sorting, label_visibility="collapsed")
 with col5:
     st.markdown('<p class="input-label">🌐 Language</p>', unsafe_allow_html=True)
     # Language selection
     def update_language():
         st.session_state.language = LANGUAGES[st.session_state.language_selection]
     language_options = list(LANGUAGES.keys())
-    st.selectbox("", language_options, key="language_selection", index=language_options.index("English"), on_change=update_language, label_visibility="collapsed")
+    st.selectbox("language options", language_options, key="language_selection", index=language_options.index("English"), on_change=update_language, label_visibility="collapsed")
     
 
 # Search button with custom styling
