@@ -204,7 +204,7 @@ if "sort_by" not in st.session_state:
     st.session_state.sort_by = "Default"  # Default sort order
 
 
-st.set_pae_config(page_title="PathPlanner",layout="centered",page_icon="🎯")
+st.set_page_config(page_title="PathPlanner",layout="centered",page_icon="🎯")
 
 # Custom CSS for modern UI
 st.markdown("""
