@@ -91,7 +91,7 @@ LANGUAGES = {
     "Russian": "ru",
     "Portuguese": "pt",
     "Telugu" : "te",
-    "Tamil":"tm",
+    "Tamil":"ta",
     "Kannada":"kn",
     "Malayalam":"ml"
 }
