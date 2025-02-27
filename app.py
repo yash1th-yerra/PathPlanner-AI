@@ -40,9 +40,9 @@ prompt_template = PromptTemplate(
     with a preference for {preference}. Provide travel options for cab, train, bus, and flight. 
     Return the response strictly in **valid JSON format**, without any extra text or explanations.
     Ensure prices are in the correct currency based on the source country.
-
+    
     If a travel mode (e.g., bus, train) is **not possible**, provide a clear reason in the "description" field.
-
+    
     Example Output:
     ```json
     {{
@@ -114,7 +114,8 @@ def generate_travel_summary(source, destination, travel_data, language="en"):
     1. Mention all available transportation methods (flights, trains, buses, cabs)
     2. For each method, briefly mention:
        - Main advantages/disadvantages
-    3. End with a brief comparison of which option is best for different priorities 
+    3. If a direct travel mode (e.g., bus, train) is **not possible**, provide brief information about indirect routes or multiple-step journeys in the "description" field, and recommend the best indirect option.
+    4. End with a brief comparison of which option is best for different priorities 
        (fastest, cheapest, most comfortable)
     
     Keep the summary informative in point wise but concise (max 100 words),strictly don't include any breakdown of key translations.
@@ -201,6 +202,9 @@ if "currency_symbol" not in st.session_state:
     st.session_state.currency_symbol = "$"
 if "sort_by" not in st.session_state:
     st.session_state.sort_by = "Default"  # Default sort order
+
+
+st.set_pae_config(page_title="PathPlanner",layout="centered",page_icon="🎯")
 
 # Custom CSS for modern UI
 st.markdown("""
