@@ -103,20 +103,21 @@ def get_language_name(language_code):
     return "English"
 
 # Function to generate a summary description of travel options
-def generate_travel_summary(source, destination, travel_data, language="en"):
+def generate_travel_summary(source, destination, preference,travel_data, language="en"):
     """Generate a comprehensive summary of travel options between two locations"""
     
     # Create a prompt for the summary
     summary_prompt = PromptTemplate(
-        input_variables=["source", "destination"],
+        input_variables=["source", "destination","preference"],
         template = """
-    You are an AI travel assistant. A user wants to travel from {source} to {destination}. 
+    You are an AI travel assistant. A user wants to travel from {source} to {destination} based on {preference}. 
     Provide travel options for cab, train, bus, and flight with estimated prices and travel times.
     Strictly don't include summary table, but include recommendations and precautionary notes
     """)
     
     summary_chain = {"source": RunnablePassthrough(), 
-         "destination": RunnablePassthrough()} | summary_prompt | llm
+         "destination": RunnablePassthrough(),
+         "preference":RunnablePassthrough()} | summary_prompt | llm
     
     # Get summary from Gemini
     response2 = summary_chain.invoke({"source":source,"destination":destination})
@@ -424,7 +425,7 @@ if search_clicked:
                 st.session_state.response = travel_data  # Store response in session state
                 st.session_state.currency_symbol = get_currency_symbol(source)  # Store currency
                 language = st.session_state.language
-                summary = generate_travel_summary(source, destination, travel_data, language)
+                summary = generate_travel_summary(source, destination, preference,travel_data, language)
                 st.session_state.summary = summary
             except json.JSONDecodeError as e:
                 st.error("❌ Oops! AI response is not in the correct format. Check logs for details.")
