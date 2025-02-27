@@ -90,7 +90,10 @@ LANGUAGES = {
     "Arabic": "ar",
     "Russian": "ru",
     "Portuguese": "pt",
-    "Telugu" : "te"
+    "Telugu" : "te",
+    "Tamil":"tm",
+    "Kannada":"kn",
+    "Malayalam":"ml"
 }
 
 def get_language_name(language_code):
