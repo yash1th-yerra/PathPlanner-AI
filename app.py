@@ -104,25 +104,19 @@ def generate_travel_summary(source, destination, travel_data, language="en"):
     """Generate a comprehensive summary of travel options between two locations"""
     
     # Create a prompt for the summary
-    summary_prompt = f"""
-    Create a concise and short summary of travel options from {source} to {destination}.
+    summary_prompt = PromptTemplate(
+        input_variables=["source", "destination"],
+        template = """
+    You are an AI travel assistant. A user wants to travel from {source} to {destination}. 
+    Provide travel options for cab, train, bus, and flight with estimated prices and travel times.
+    Strictly don't include summary table, but include recommendations and precautionary notes
+    """)
     
-    Use the following data to inform your summary:
-    {json.dumps(travel_data, indent=2)}
-    
-    The summary should:
-    1. Mention all available transportation methods (flights, trains, buses, cabs)
-    2. For each method, briefly mention:
-       - Main advantages/disadvantages
-    3. If a direct travel mode (e.g., bus, train) is **not possible**, provide brief information about indirect routes or multiple-step journeys in the "description" field, and recommend the best indirect option.
-    4. End with a brief comparison of which option is best for different priorities 
-       (fastest, cheapest, most comfortable)
-    
-    Keep the summary informative in point wise but concise (max 100 words),strictly don't include any breakdown of key translations.
-    """
+    summary_chain = {"source": RunnablePassthrough(), 
+         "destination": RunnablePassthrough()} | summary_prompt | llm
     
     # Get summary from Gemini
-    response2 = llm.invoke(summary_prompt)
+    response2 = summary_chain.invoke({"source":source,"destination":destination})
     summary = response2.content
     
     # If a different language is requested, translate the summary
